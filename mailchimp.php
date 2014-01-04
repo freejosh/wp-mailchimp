@@ -1211,7 +1211,7 @@ function mailchimpSF_signup_submit() {
 	$igs = !is_array($igs) ? array() : $igs;
 	foreach ($igs as $ig) {
 		$groups = '';
-		if (get_option('mc_show_interest_groups_'.$ig['id']) == 'on') {
+		//if (get_option('mc_show_interest_groups_'.$ig['id']) == 'on') {
 			$groupings = array();
 			switch ($ig['form_field']) {
 				case 'select':
@@ -1224,6 +1224,7 @@ function mailchimpSF_signup_submit() {
 						);
 					}
 					break;
+				case 'hidden':
 				case 'checkboxes':
 				case 'checkbox':
 					if (isset($_POST['group'][$ig['id']])) {
@@ -1247,7 +1248,7 @@ function mailchimpSF_signup_submit() {
 			if (!empty($groupings)) {
 				$merge['GROUPINGS'][] = $groupings;
 			}
-		}
+		//}
 	}
 
 	// If we're good
