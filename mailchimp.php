@@ -110,10 +110,6 @@ function mailchimpSF_load_resources() {
 		wp_enqueue_script('datepicker', MCSF_URL.'/js/datepicker.js', array('jquery','jquery-ui-core'));
 	}
 
-	//wp_enqueue_style('mailchimpSF_main_css', home_url('?mcsf_action=main_css&ver='.MCSF_VER));
-	//wp_enqueue_style('mailchimpSF_ie_css', MCSF_URL.'css/ie.css');
-	//global $wp_styles;
-	//$wp_styles->add_data( 'mailchimpSF_ie_css', 'conditional', 'IE' );
 }
 
 
@@ -1307,44 +1303,42 @@ function mailchimpSF_signup_submit() {
 	$igs = !is_array($igs) ? array() : $igs;
 	foreach ($igs as $ig) {
 		$groups = '';
-		//if (get_option('mc_show_interest_groups_'.$ig['id']) == 'on') {
-			$groupings = array();
-			switch ($ig['form_field']) {
-				case 'select':
-				case 'dropdown':
-				case 'radio':
-					if (isset($_POST['group'][$ig['id']])) {
-						$groupings = array(
-							'id' => $ig['id'],
-							'groups' => str_replace(',', '\,', stripslashes($_POST['group'][$ig['id']])),
-						);
+		$groupings = array();
+		switch ($ig['form_field']) {
+			case 'select':
+			case 'dropdown':
+			case 'radio':
+				if (isset($_POST['group'][$ig['id']])) {
+					$groupings = array(
+						'id' => $ig['id'],
+						'groups' => str_replace(',', '\,', stripslashes($_POST['group'][$ig['id']])),
+					);
+				}
+				break;
+			case 'hidden':
+			case 'checkboxes':
+			case 'checkbox':
+				if (isset($_POST['group'][$ig['id']])) {
+					foreach ($_POST['group'][$ig['id']] as $i => $value) {
+						// Escape
+						$groups .= str_replace(',', '\,', stripslashes($value)).',';
 					}
-					break;
-				case 'hidden':
-				case 'checkboxes':
-				case 'checkbox':
-					if (isset($_POST['group'][$ig['id']])) {
-						foreach ($_POST['group'][$ig['id']] as $i => $value) {
-							// Escape
-							$groups .= str_replace(',', '\,', stripslashes($value)).',';
-						}
-						$groupings = array(
-							'id' => $ig['id'],
-							'groups' => $groups,
-						);
-					}
-					break;
-				default:
-					// Nothing
-					break;
-			}
-			if (!isset($merge['GROUPINGS']) || !is_array($merge['GROUPINGS'])) {
-				$merge['GROUPINGS'] = array();
-			}
-			if (!empty($groupings)) {
-				$merge['GROUPINGS'][] = $groupings;
-			}
-		//}
+					$groupings = array(
+						'id' => $ig['id'],
+						'groups' => $groups,
+					);
+				}
+				break;
+			default:
+				// Nothing
+				break;
+		}
+		if (!isset($merge['GROUPINGS']) || !is_array($merge['GROUPINGS'])) {
+			$merge['GROUPINGS'] = array();
+		}
+		if (!empty($groupings)) {
+			$merge['GROUPINGS'][] = $groupings;
+		}
 	}
 
 	// If we're good
