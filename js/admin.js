@@ -8,7 +8,7 @@ jQuery(function($) {
 		auth_poll = setInterval(function() {
 			if (login_window.closed) {
 				clearInterval(auth_poll);
-				window.location.href = window.location.href;
+				window.location.reload();
 			}
 		}, 100);
 	});

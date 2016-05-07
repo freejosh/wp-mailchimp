@@ -114,9 +114,6 @@ function mailchimpSF_signup_form($args = array()) {
 		
 		// Show our Interest groups fields if we have them, and they're set to on
 		if (is_array($igs) && !empty($igs)) {
-			?>
-			<div class="mc_interests">
-			<?php
 			foreach ($igs as $ig) {
 				if (is_array($ig) && isset($ig['id'])) {
 					if (($igs && get_option('mc_show_interest_groups_'.$ig['id']) == 'on') || MAILCHIMP_DEV_MODE == true) {
@@ -143,9 +140,7 @@ function mailchimpSF_signup_form($args = array()) {
 					<?php
 					}
 				}
-			}?>
-			</div><!-- /mc_interests -->
-			<?php 
+			}
 		}
 
 		if (get_option('mc_email_type_option') || MAILCHIMP_DEV_MODE == true) {
@@ -414,7 +409,7 @@ class mailchimpSF_Widget extends WP_Widget {
 		$widget_ops = array( 
 			'description' => __('Displays a MailChimp Subscribe box', 'mailchimp_i18n')
 		);
-		$this->WP_Widget('mailchimpSF_widget', __('MailChimp Widget', 'mailchimp_i18n'), $widget_ops);
+		parent::__construct('mailchimpSF_widget', __('MailChimp Widget', 'mailchimp_i18n'), $widget_ops);
 	}
 	function widget( $args, $instance ) {
 		if (!is_array($instance)) {

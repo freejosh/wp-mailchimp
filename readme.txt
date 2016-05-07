@@ -1,9 +1,9 @@
 === MailChimp List Subscribe Form ===
-Contributors: crowdfavorite
+Contributors: mailchimp
 Tags: mailchimp, email, newsletter, signup, marketing, plugin, widget
 Requires at least: 2.8
-Tested up to: 4.0
-Stable tag: 1.4.3
+Tested up to: 4.4.2
+Stable tag: 1.4.5
 
 == Description ==
 
@@ -69,10 +69,7 @@ If you are upgrading to version 1.2.1 and you used the widget in your sidebar pr
 == Internationalization (i18n) ==
 Currently we have the plugin configured so it can be easily translated and the following languages supported:
 
-* ar_SA - Arabic in Saudi Arabia and Middle East (thanks to [Lenin](http://twitter.com/nine_l) for compiling and Nagwa Ibrahim, Egypt for translating)
 * bg_BG - Bulgarian in Bulgaria (thanks to [SiteGround](http://www.siteground.com/wordpress-hosting.htm) for contributing)
-* ca    - Catalan (thanks to [DeMomentSomTres Vilafranca Web Design](http://demomentsomtres.com) for contributing
-* bn_BD - Bangla in Bangladesh (thanks to [Lenin](http://twitter.com/nine_l) for contributing)
 * cs_CZ - Czech in the Czech Republic (thanks to [Peter Kahoun](http://kahi.cz/) for contributing)
 * da_DK - Danish in Denmark (thanks to Jan Lund for contributing)
 * de_DE - German in Germany (thanks to Michael Jaekel for contributing)
@@ -141,15 +138,6 @@ Maybe! Look in the /po/ directory in our plugin package and see if your language
 
 == Upgrade Notice ==
 
-= 1.4.3 =
-Fixed an issue with improper URLs to updating profile settings
-Fixed an issue in which backslashes, single and double quotes were having an extra slash attached
-Fixed an issue in which logging out then attempting to reconnect with OAuth prevented actual login
-Updated translation files to support the latest strings
-Adjust how alerts are handled to prevent header from being seen
-Update instances of home_url to properly refernce admin_url
-Update to prevent PHP warnings when WP_DEBUG is enabled
-
 = 1.4.2 =
 add customized wp_nonces functions for post-back behavior to fix 4.0 callbacks
 
@@ -181,14 +169,16 @@ Added support for multiple interest groups, field formatting based on type and d
 
 == Changelog ==
 
-= 1.4.3 =
-* Prevent assets from having double slashes in the URL which causes issues with caching plugins
-* Prevent WP error bars from overlapping the header image and text
-* Fixed an issue which generated the incorrect URL to update a profile
-* Fixed an issue which would occasionally prevent connection for users with versions of PHP < 5.6.0
+=1.4.5=
+* Load admin CSS over relative home url path.
+* Fix address and phone fields not passing correctly.
 
-= 1.4.2 =
-* Update to address changes in nonces for WP 4.0
+= 1.4.4 =
+* Stop using deprecated widget constructor
+
+= 1.4.3 =
+* Fix issue with improperly escaped text fields
+* Fix issue with malformed update profile link
 
 = 1.4.1 =
 * Update styles to be compatible with upcoming 3.8 wp-admin changes

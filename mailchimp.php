@@ -3,7 +3,7 @@
 Plugin Name: MailChimp
 Plugin URI: http://www.mailchimp.com/plugins/mailchimp-wordpress-plugin/
 Description: The MailChimp plugin allows you to quickly and easily add a signup form for your MailChimp list.
-Version: 1.4.3
+Version: 1.4.5
 Author: MailChimp and Crowd Favorite
 Author URI: http://mailchimp.com/api/
 */
@@ -25,7 +25,7 @@ Author URI: http://mailchimp.com/api/
 */
 
 // Version constant for easy CSS refreshes
-define('MCSF_VER', '1.4.3');
+define('MCSF_VER', '1.4.5');
 
 // What's our permission (capability) threshold
 define('MCSF_CAP_THRESHOLD', 'manage_options');
@@ -91,23 +91,23 @@ add_filter('plugin_action_links_'.plugin_basename(__FILE__), 'mailchimpSD_plugin
  */
 function mailchimpSF_load_resources() {
 	// JS
-	if ( get_option( 'mc_use_javascript' ) == 'on' ) {
-		if ( ! is_admin() ) {
-			wp_enqueue_script( 'jquery_scrollto', MCSF_URL.'js/scrollTo.js', array( 'jquery' ), MCSF_VER );
-			wp_enqueue_script( 'mailchimpSF_main_js', MCSF_URL.'js/mailchimp.js', array( 'jquery' , 'jquery-form' ), MCSF_VER );
+	if (get_option('mc_use_javascript') == 'on') {
+		if (!is_admin()) {
+			wp_enqueue_script('jquery_scrollto', MCSF_URL.'js/scrollTo.js', array('jquery'), MCSF_VER);
+			wp_enqueue_script('mailchimpSF_main_js', MCSF_URL.'js/mailchimp.js', array('jquery', 'jquery-form'), MCSF_VER);
 			// some javascript to get ajax version submitting to the proper location
 			global $wp_scripts;
-			$wp_scripts->localize( 'mailchimpSF_main_js', 'mailchimpSF', array(
-				'ajax_url' => trailingslashit( home_url() ),
+			$wp_scripts->localize('mailchimpSF_main_js', 'mailchimpSF', array(
+				'ajax_url' => trailingslashit(home_url()),
 			));
 		}
 	}
 
-	if ( get_option( 'mc_use_datepicker' ) == 'on' && ! is_admin() ) {
+	if (get_option('mc_use_datepicker') == 'on' && !is_admin()) {
 		// Datepicker theme
-		wp_enqueue_style( 'flick', MCSF_URL . 'css/flick/flick.css' );
+		wp_enqueue_style('flick', MCSF_URL.'/css/flick/flick.css');
 		// Datepicker JS
-		wp_enqueue_script( 'datepicker', MCSF_URL . 'js/datepicker.js', array( 'jquery','jquery-ui-core' ) );
+		wp_enqueue_script('datepicker', MCSF_URL.'/js/datepicker.js', array('jquery','jquery-ui-core'));
 	}
 
 }
@@ -344,6 +344,7 @@ function mailchimpSF_request_handler() {
 }
 add_action('init', 'mailchimpSF_request_handler');
 
+
 function mailchimpSF_auth_nonce_key($salt = null) {
 	if (is_null($salt)) {
 		$salt = mailchimpSF_auth_nonce_salt();
@@ -356,28 +357,28 @@ function mailchimpSF_auth_nonce_salt() {
 }
 
 function mailchimpSF_authorize() {
-	$api = mailchimpSF_get_api( true );
-	$proxy = apply_filters( 'mailchimp_authorize_url', $api->getApiUrl( 'authorize' ) );
-	if ( strpos( $proxy, 'socialize-this' ) !== false ) {
+	$api = mailchimpSF_get_api(true);
+	$proxy = apply_filters('mailchimp_authorize_url', $api->getApiUrl('authorize'));
+	if (strpos($proxy, 'socialize-this') !== false) {
 		$salt = mailchimpSF_auth_nonce_salt();
 		$id = mailchimpSF_create_nonce( mailchimpSF_auth_nonce_key( $salt ) );
 
-		$url = admin_url( 'index.php' );
+		$url = home_url('index.php');
 		$args = array(
 			'mcsf_action' => 'authorized',
 			'salt' => $salt,
 			'user_id' => get_current_user_id(),
 		);
 
-		$proxy = add_query_arg( array(
+		$proxy = add_query_arg(array(
 			'id' => $id,
-			'response_url' => urlencode( add_query_arg( $args, $url ) )
-		), $proxy );
+			'response_url' => urlencode(add_query_arg($args, $url))
+		), $proxy);
 
-		$proxy = apply_filters( 'mailchimp_proxy_url', $proxy );
+		$proxy = apply_filters('mailchimp_proxy_url', $proxy);
 	}
 
-	wp_redirect( $proxy );
+	wp_redirect($proxy);
 	exit;
 }
 
@@ -648,18 +649,10 @@ function mailchimpSF_save_general_form_settings() {
 
 	if (MAILCHIMP_DEV_MODE == false) {
 		//we told them not to put these things we are replacing in, but let's just make sure they are listening...
-		$header_keys = array(
-			'mc_header_border_width' => 'px',
-			'mc_header_border_color' => '#',
-			'mc_header_background' => '#',
-			'mc_header_text_color' => '#',
-		);
-		// Prevent WP_DEBUG warnings and updating when they are not set
-		foreach ( $header_keys as $header_key => $header_replacement) {
-			if ( isset( $_POST[ $header_key ] ) ) {
-				update_option( $header_key, str_replace( $header_replacement, '', $_POST[ $header_key ] ) );
-			}
-		}
+		update_option('mc_header_border_width',str_replace('px','',$_POST['mc_header_border_width']) );
+		update_option('mc_header_border_color', str_replace('#','',$_POST['mc_header_border_color']));
+		update_option('mc_header_background',str_replace('#','',$_POST['mc_header_background']));
+		update_option('mc_header_text_color', str_replace('#','',$_POST['mc_header_text_color']));
 	}
 
 	update_option('mc_form_border_width',str_replace('px','',$_POST['mc_form_border_width']) );
@@ -723,7 +716,7 @@ function mailchimpSF_change_list_if_necessary() {
 		}
 
 		$orig_list = get_option('mc_list_id');
-		if ( ! empty( $list_id ) ) {
+		if ($list_id != '') {
 			update_option('mc_list_id', $list_id);
 			update_option('mc_list_name', $list_name);
 			update_option('mc_email_type_option', $lists[$list_key]['email_type_option']);
@@ -782,9 +775,10 @@ function mailchimpSF_change_list_if_necessary() {
 function mailchimpSF_setup_page() {
 ?>
 <div class="wrap">
-	<h2 class="mailchimp-header">
-		<span class="header-content"> <?php esc_html_e( 'MailChimp List Setup', 'mailchimp_i18n' ); ?> </span>
-	</h2>
+
+	<div class="mailchimp-header">
+		<h2><?php esc_html_e('MailChimp List Setup', 'mailchimp_i18n');?> </h2>
+	</div>
 <?php
 
 // Display Developer mode active.
@@ -820,13 +814,13 @@ if (!$user && MAILCHIMP_DEV_MODE == false) {
 			);
 			?>
 		</p>
-
+		
 		<div style="width: 900px;">
 			<table class="widefat mc-widefat mc-api">
 				<tr valign="top">
 					<th scope="row" class="mailchimp-connect"><?php esc_html_e('Connect to MailChimp', 'mailchimp_i18n'); ?></th>
 					<td>
-						<a href="<?php echo add_query_arg(array("mcsf_action" => "authorize"), admin_url('index.php')) ?>" class="mailchimp-login">Connect</a>
+						<a href="<?php echo add_query_arg(array("mcsf_action" => "authorize"), home_url('index.php')) ?>" class="mailchimp-login">Connect</a>
 					</td>
 				</tr>
 			</table>
@@ -1023,14 +1017,14 @@ if (get_option('mc_list_id') == '' && MAILCHIMP_DEV_MODE == false) return;
 			<em><label for="mc_rewards"><?php esc_html_e('Turning this on will place a "powered by MailChimp" link in your form that will earn you credits with us. It is optional and can be turned on or off at any time.', 'mailchimp_i18n'); ?></label></em>
 		</td>
 	</tr>
-
+	
 	<tr valign="top">
 		<th scope="row"><?php esc_html_e('Use Javascript Support?', 'mailchimp_i18n'); ?></th>
 		<td><input name="mc_use_javascript" type="checkbox" <?php checked(get_option('mc_use_javascript'), 'on'); ?> id="mc_use_javascript" class="code" />
 			<em><label for="mc_use_javascript"><?php esc_html_e('Turning this on will use fancy javascript submission and should degrade gracefully for users not using javascript. It is optional and can be turned on or off at any time.', 'mailchimp_i18n'); ?></label></em>
 		</td>
 	</tr>
-
+	
 	<tr valign="top">
 		<th scope="row"><?php esc_html_e('Use Javascript Datepicker?', 'mailchimp_i18n'); ?></th>
 		<td><input name="mc_use_datepicker" type="checkbox" <?php checked(get_option('mc_use_datepicker'), 'on'); ?> id="mc_use_datepicker" class="code" />
@@ -1063,7 +1057,7 @@ if (MAILCHIMP_DEV_MODE == false) { ?>
 
 				<?php
 				$mv = get_option('mc_merge_vars');
-
+				
 				if (count($mv) == 0 || !is_array($mv)){
 					?>
 					<em><?php esc_html_e('No Merge Variables found.', 'mailchimp_i18n'); ?></em>
@@ -1257,12 +1251,12 @@ function mailchimpSF_signup_submit() {
 
 	// Loop through our Merge Vars, and if they're empty, but required, then print an error, and mark as failed
 	foreach($mv as $var) {
+		// We also want to create an array where the keys are the tags for easier validation later
+		$mv_tag_keys[$var['tag']] = $var;
+		
 		$opt = 'mc_mv_'.$var['tag'];
-
-		$opt_val = isset($_POST[$opt]) ? $_POST[$opt] : '';
-
-		// WordPress auto adds slashes to everything (in plugins)
-		$opt_val = stripslashes_deep( $opt_val );
+		
+		$opt_val = isset($_POST[$opt]) ? stripslashes_deep($_POST[$opt]) : '';
 
 		if (is_array($opt_val) && isset($opt_val['area'])) {
 			// This filters out all 'falsey' elements
@@ -1302,9 +1296,6 @@ function mailchimpSF_signup_submit() {
 				$merge[$var['tag']] = $opt_val;
 			}
 		}
-
-		// We also want to create an array where the keys are the tags for easier validation later
-		$mv_tag_keys[$var['tag']] = $var;
 
 	}
 
@@ -1380,7 +1371,7 @@ function mailchimpSF_signup_submit() {
 		// Custom validation based on type
 		if (is_array($merge) && !empty($merge)) {
 			foreach ($merge as $merge_key => $merge_value) {
-				if ($merge_key !== 'GROUPINGS' && isset($mv_tag_keys[$merge_key])) {
+				if ($merge_key !== 'GROUPINGS') {
 					switch ($mv_tag_keys[$merge_key]['field_type']) {
 						case 'phone':
 							if ($mv_tag_keys[$merge_key]['phoneformat'] == 'US') {
@@ -1490,25 +1481,25 @@ function mailchimpSF_where_am_i() {
 			'url' => plugins_url(),
 		),
 		'template' => array(
-			'dir' => trailingslashit( get_template_directory() ) . 'plugins/',
-			'url' => trailingslashit( get_template_directory_uri() ) . 'plugins/',
+			'dir' => trailingslashit(get_template_directory()).'plugins/',
+			'url' => trailingslashit(get_template_directory_uri()).'plugins/',
 		),
 		'stylesheet' => array(
-			'dir' => trailingslashit( get_stylesheet_directory() ) . 'plugins/',
-			'url' => trailingslashit( get_stylesheet_directory_uri() ) . 'plugins/',
+			'dir' => trailingslashit(get_stylesheet_directory()).'plugins/',
+			'url' => trailingslashit(get_stylesheet_directory_uri()).'plugins/',
 		),
 	);
 
 	// Set defaults
-	$mscf_dirbase = ltrim( trailingslashit( basename( dirname( __FILE__ ) ) ), '/' ); // Typically wp-mailchimp/ or mailchimp/
-	$mscf_dir = trailingslashit( WP_PLUGIN_DIR ) . $mscf_dirbase;
-	$mscf_url = trailingslashit( WP_PLUGIN_URL ) . $mscf_dirbase;
+	$mscf_dirbase = trailingslashit(basename(dirname(__FILE__))); // Typically wp-mailchimp/ or mailchimp/
+	$mscf_dir = trailingslashit(WP_PLUGIN_DIR).$mscf_dirbase;
+	$mscf_url = trailingslashit(WP_PLUGIN_URL).$mscf_dirbase;
 
 	// Try our hands at finding the real location
 	foreach ($locations as $key => $loc) {
-		$dir = trailingslashit( $loc['dir']) . $mscf_dirbase;
-		$url = trailingslashit( $loc['url']) . $mscf_dirbase;
-		if (is_file( $dir . basename(__FILE__) ) ) {
+		$dir = trailingslashit($loc['dir']).$mscf_dirbase;
+		$url = trailingslashit($loc['url']).$mscf_dirbase;
+		if (is_file($dir.basename(__FILE__))) {
 			$mscf_dir = $dir;
 			$mscf_url = $url;
 			break;
@@ -1516,19 +1507,19 @@ function mailchimpSF_where_am_i() {
 	}
 
 	// Define our complete filesystem path
-	define( 'MCSF_DIR', $mscf_dir );
+	define('MCSF_DIR', $mscf_dir);
 
 	/* Lang location needs to be relative *from* ABSPATH,
 	so strip it out of our language dir location */
-	define( 'MCSF_LANG_DIR', trailingslashit( MCSF_DIR ) . 'po/' );
+	define('MCSF_LANG_DIR', trailingslashit(MCSF_DIR).'po/');
 
 	// Define our complete URL to the plugin folder
-	define( 'MCSF_URL', $mscf_url );
+	define('MCSF_URL', $mscf_url);
 }
 
 
 /**
- * MODIFIED VERSION of wp_verify_nonce from WP Core. Core was not overridden to prevent problems when replacing
+ * MODIFIED VERSION of wp_verify_nonce from WP Core. Core was not overridden to prevent problems when replacing 
  * something universally.
  *
  * Verify that correct nonce was used with time limit.
@@ -1572,7 +1563,7 @@ function mailchimpSF_verify_nonce($nonce, $action = -1) {
 
 
 /**
- * MODIFIED VERSION of wp_create_nonce from WP Core. Core was not overridden to prevent problems when replacing
+ * MODIFIED VERSION of wp_create_nonce from WP Core. Core was not overridden to prevent problems when replacing 
  * something universally.
  *
  * Creates a cryptographic token tied to a specific action, user, and window of time.
