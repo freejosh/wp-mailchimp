@@ -1,5 +1,5 @@
 === MailChimp List Subscribe Form ===
-Contributors: MailChimp
+Contributors: crowdfavorite
 Tags: mailchimp, email, newsletter, signup, marketing, plugin, widget
 Requires at least: 2.8
 Tested up to: 4.5
@@ -74,6 +74,31 @@ Currently we have the plugin configured so it can be easily translated and the f
 * tr_TR - Turkish in Turkey (thanks to [Hakan E.](http://kazancexpert.com/) for contributing)
 
 If your language is not listed above, feel free to create a translation. Here are the basic steps:
+
+1. Copy "mailchimp_i18n-en_US.po" to "mailchimp_i18n-LANG_COUNTRY.po" - fill in LANG and COUNTRY with whatever you use for WPLANG in wp-config.php
+2. Grab a transalation editor. [POedit](http://www.poedit.net/) works for us
+3. Translate each line - if you need some context, just open up mailchimp.php and search for the line number or text
+4. [Fork](http://help.github.com/fork-a-repo/) the [repository on github](https://github.com/crowdfavorite/wp-mailchimp)
+5. [Clone](http://help.github.com/remotes/#clone) the _develop_ branch
+6. Add the appropriately named files to the /po/ directory and edit the /readme.txt to include how you'd like to be attributed
+7. Make a [pull request](http://help.github.com/send-pull-requests/)
+
+
+== Frequently Asked Questions ==
+
+= What in the world is MailChimp? =
+
+Good question! [MailChimp](http://mailchimp.com/features/all/) is full of useful, powerful email marketing features that are easy to use and even a little fun (that's right---we said fun), whether you're an email marketing expert, or a small business just getting started.
+
+To learn more, just check out our site: [MailChimp](http://mailchimp.com/features/all/)
+
+
+= Wait a minute, you want me to pay to try this? =
+
+*Absolutely not!* We welcome you to come signup for a [FREE Trial Account](http://mailchimp.com/signup/) and see if you find it useful.
+
+= I want this in my language, do you have a translation? =
+Maybe! Look in the /po/ directory in our plugin package and see if your language is in there. If it is, great! If it is not, feel from to create one. Here are the basic steps:
 
 1. Copy "mailchimp_i18n-en_US.po" to "mailchimp_i18n-LANG_COUNTRY.po" - fill in LANG and COUNTRY with whatever you use for WPLANG in wp-config.php
 2. Grab a transalation editor. [POedit](http://www.poedit.net/) works for us
