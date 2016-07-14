@@ -938,6 +938,7 @@ function mailchimpSF_groups_submit($igs) {
                         $groups->$value = true;
                     }
                     break;
+                case 'hidden':
                 case 'checkboxes':
                     if (isset($_POST['group'][$ig['id']])) {
                         foreach ($_POST['group'][$ig['id']] as $id => $value) {
