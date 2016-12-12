@@ -18,11 +18,21 @@ class MailChimp_API {
         return;
     }
 
-    public function get($endpoint, $count=10) {
+    public function get($endpoint, $count=10, $fields) {
         $url = $this->api_url . $endpoint;
 
         if($count) {
-            $url .= '?count=' . $count;
+            $query_params = 'count=' . $count . '&';
+        }
+
+        if(!empty($fields)) {
+            foreach($fields as $field => $value) {
+                $query_params .= $field . '=' . $value . '&';
+            }
+        }
+
+        if($query_params){
+            $url .= "?{$query_params}";
         }
 
         $args = array(
@@ -38,8 +48,8 @@ class MailChimp_API {
         if(is_array($request) && $request['response']['code'] == 200) {
             return json_decode($request['body'], true);
         } elseif(is_array($request) && $request['response']['code']) {
-            $error = json_decode($request['body']);
-            $error = new WP_Error('mailchimp-get-error', $error->detail);
+            $error = json_decode($request['body'], true);
+            $error = new WP_Error('mailchimp-get-error', $error['detail']);
             return $error;
         } else {
             return false;
@@ -67,8 +77,20 @@ class MailChimp_API {
                 return new WP_Error('mc-subscribe-error', $request->get_error_message());
             }
 
-            $body = json_decode($request['body']);
-            return new WP_Error('mc-subscribe-error-api', $body['detail']);
+            $body = json_decode($request['body'], true);
+            $merges = get_option('mc_merge_vars');
+            foreach ($merges as $merge) {
+                if (empty($body['errors'])) {
+                    //Email address doesn't come back from the API, so if something's wrong, it's that.
+                    $field_name = 'Email Address';
+                    $body['errors'][0]['message'] = 'Please fill out a valid email address.';
+                }
+                elseif ($merge['tag'] == $body['errors'][0]['field']) {
+                    $field_name = $merge['name'];
+                }
+            }
+            $message = sprintf($field_name . ": " . $body['errors'][0]['message']);
+            return new WP_Error('mc-subscribe-error-api', $message);
         }
     }
 }

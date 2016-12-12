@@ -106,7 +106,7 @@ if ($api){
     <form method="post" action="options-general.php?page=mailchimpSF_options">
         <?php
         //we *could* support paging, but few users have that many lists (and shouldn't)
-        $lists = $api->get('lists',100);
+        $lists = $api->get('lists', 100, array('fields' => 'lists.id,lists.name,lists.email_type_option'));
         $lists = $lists['lists'];
 
         if (count($lists) == 0) {
@@ -269,6 +269,12 @@ if (get_option('mc_list_id') == '') return;
         <th scope="row"><?php esc_html_e('Use Double Opt-In (Recommended)?', 'mailchimp_i18n'); ?></th>
         <td><input name="mc_double_optin" type="checkbox" <?php checked(get_option('mc_double_optin'), true); ?> id="mc_double_optin" class="code" />
             <em><label for="mc_double_optin"><?php esc_html_e('Before new your subscribers are added via the plugin, they\'ll need to confirm their email address.', 'mailchimp_i18n'); ?></label></em>
+        </td>
+    </tr>
+    <tr valign="top">
+        <th scope="row"><?php esc_html_e('Update existing subscribers?', 'mailchimp_i18n'); ?></th>
+        <td><input name="mc_update_existing" type="checkbox" <?php checked(get_option('mc_update_existing'), true); ?> id="mc_update_existing" class="code" />
+            <em><label for="mc_double_optin"><?php esc_html_e('If an existing subscriber fills out this form, we will update their information with what\'s provided.', 'mailchimp_i18n'); ?></label></em>
         </td>
     </tr>
     

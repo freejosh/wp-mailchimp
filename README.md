@@ -2,7 +2,7 @@
 Contributors: crowdfavorite
 Tags: mailchimp, email, newsletter, signup, marketing, plugin, widget
 Requires at least: 2.8
-Tested up to: 4.5
+Tested up to: 4.0
 Stable tag: 1.5
 
 == Description ==

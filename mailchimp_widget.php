@@ -381,7 +381,7 @@ function mailchimp_form_field($var, $num_fields) {
 				break;
 			case 'birthday':
 				$html .= '
-	<input type="text" size="18" placeholder="'.esc_attr($var['default_value']).'" data-format="'.esc_attr($var['dateformat']).'" name="'.esc_attr($opt).'" id="'.esc_attr($opt).'" class="birthdate-pick mc_input"/>';
+	<input type="text" size="18" placeholder="'.esc_attr($var['default_value']).'" data-format="'.esc_attr($var['options']['date_format']).'" name="'.esc_attr($opt).'" id="'.esc_attr($opt).'" class="birthdate-pick mc_input"/>';
 				break;
 			case 'birthday-old':
 				$days = range(1, 31);
@@ -472,7 +472,7 @@ function mailchimp_form_field($var, $num_fields) {
 
 class mailchimpSF_Widget extends WP_Widget {
 
-	function mailchimpSF_Widget() {
+	function __construct() {
 		$widget_ops = array( 
 			'description' => __('Displays a MailChimp Subscribe box', 'mailchimp_i18n')
 		);

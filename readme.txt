@@ -3,7 +3,7 @@ Contributors: MailChimp
 Tags: mailchimp, email, newsletter, signup, marketing, plugin, widget
 Requires at least: 2.8
 Tested up to: 4.5
-Stable tag: 1.5
+Stable tag: 1.5.3
 
 == Description ==
 
@@ -83,7 +83,6 @@ If your language is not listed above, feel free to create a translation. Here ar
 6. Add the appropriately named files to the /po/ directory and edit the /readme.txt to include how you'd like to be attributed
 7. Make a [pull request](http://help.github.com/send-pull-requests/)
 
-
 == Screenshots ==
 
 1. Entering your MailChimp login info
@@ -127,6 +126,18 @@ Fixes major bug with "Settings" link on Plugins screen.
 Added support for multiple interest groups, field formatting based on type and date picker.
 
 == Changelog ==
+
+= 1.5.3 =
+* Fix PHP7 compatibility issue
+* Cut down on size of API requests for users with large lists.
+* Fix CSS issue on removing MailChimp style.
+
+= 1.5.2 =
+* General bugfixes for merge fields.
+* When reinitializing, update merge field values.
+
+= 1.5.1 =
+* Bugfix for fatal error in MailChimp lib
 
 = 1.5 =
 * Upgrade to MailChimp API v3.0
